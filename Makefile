@@ -3,6 +3,7 @@ GO_FLAGS := CGO_ENABLED=0 GOOS=linux GO111MODULE=on
 IMAGE_NAME := abdofarag/password-generator
 IMAGE_TAG := latest
 DEPLOY_FILE := password-generator.yml
+CHART := ./Charts/password-generator/
 
 # Run all targets
 all: docker-build docker-push k8s-deploy
@@ -35,11 +36,23 @@ k8s-deploy:
 k8s-port-forward: 
 	@kubectl port-forward -n password-generator deployments/password-generator 8000:8000
 
+# Helm deploy
+helm-deploy:
+	@helm upgrade --install password-generator ${CHART} --namespace=password-generator --create-namespace
+
+# Helm deploy with ingress and hpa
+
+helm-deploy-hpa-ingress:
+	@helm upgrade --install password-generator ${CHART} --namespace=password-generator --create-namespace --set ingress.enabled=true --set autoscaling.enabled=true
+
+# Helm deploy
+helm-uninstall:
+	@helm uninstall password-generator -n password-generator
+
 # Clean up
 clean-docker:
 	@docker rm -f genpass
 	
-
 # clean k8s
 clean-k8s:
 	@kubectl delete -f $(DEPLOY_FILE) --ignore-not-found=true
@@ -49,4 +62,4 @@ clean-all: clean-k8s clean-docker
 	@rm -rf password_generator
 
 
-.PHONY: build docker-build docker-push docker-run test k8s-deploy k8s-port-forward clean-docker clean-k8s clean-all 
+.PHONY: build docker-build docker-push docker-run test k8s-deploy k8s-port-forward helm-deploy helm-deploy-hpa-ingress helm-uninstall clean-docker clean-k8s clean-all 
