@@ -195,14 +195,14 @@ To design a monitoring, logging, and alerting architecture for these environment
 
 To improve the scalabillity of the deployment, monitoring, and loging architecture for dozens of installations, we can consider the following approaches:
 
-Scalable monitoring infrastructure.
+#### Scalable monitoring infrastructure.
 We can decouple the monitoring infrastrucuture from the main infrastructure and move it to a separate scalable cluster. This technic offers greater flxibility in scaling each infrastructure indepedently and helps to isolate the monitoring tolls and data from the main infrastructure, reducing the risk of resource contention and increasing security. We can also use dedicated monitoring clusters to manage monitoring infrastructure and its resources.
 
-Migrating to a managed Kubernetes service (EKS)
+#### Migrating to a managed Kubernetes service (EKS)
 We can consider migrating from Kops to a fully managed Kuberntes service like Amazon (EKS). EKS can help to simplify the management of the Kubernetes control plane, reducing the operational burden of managing a cluster at scale. EKS provides native integrations with other AWS services.
 
-Automating infrastructure provissioning:-
+#### Automating infrastructure provissioning:-
 We can automate infrastructure provisioning using Terraform and Infrastructure as Code (IaC) practices. We can use reusable modules to deploy infrastructure across multiple environments with consistent configurations. Automating infrastructure provisioning allows us to quickly and easily scale our infrastructure to dozens of installations.Consider using (CI/CD) pipeline can help us autumate the depoloyment of our infrastructure changes, further reducing manual effort and increasing consistncy and reliabillity.
 
-Implementing centralized logging and alerting:
+#### Implementing centralized logging and alerting:
 Centralized logging is an essential component of any scalable monitoring and logging architecture. We can use a tool like Elasticsearch, Logstash, and Kibana (ELK) stack, which can collect and analyze logs from multiple sources and provide a centralized view of logs. Centralyzed alerting is essential for monitoring and responding to incidents at scale.
