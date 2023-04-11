@@ -36,9 +36,9 @@ func main() {
 	// Add middleware function to the router that checks the readiness status before each request
 	router.Use(readyz(isReady))
 
-
 	// Define routes for the /genpass and /healthz endpoints
 	router.HandleFunc("/genpass", generatePasswords).Methods("POST")
+	router.HandleFunc("/healthz", healthz)
 
 	// Start the HTTP server and listen for incoming requests on port 8000
 	fmt.Println("Server started ....")
