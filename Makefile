@@ -1,6 +1,6 @@
 # Define variables
 GO_FLAGS := CGO_ENABLED=0 GOOS=linux GO111MODULE=on
-IMAGE_NAME := kind-registry:5000/password-generator
+IMAGE_NAME := abdofarag/password-generator
 IMAGE_TAG := latest
 DEPLOY_FILE := password-generator.yml
 
@@ -35,5 +35,18 @@ k8s-deploy:
 k8s-port-forward: 
 	@kubectl port-forward -n password-generator deployments/password-generator 8000:8000
 
+# Clean up
+clean-docker:
+	@docker rm -f genpass
+	
 
-.PHONY: build docker-build docker-push docker-run test k8s-deploy k8s-port-forward
+# clean k8s
+clean-k8s:
+	@kubectl delete -f $(DEPLOY_FILE) --ignore-not-found=true
+
+# Clean up
+clean-all: clean-k8s clean-docker
+	@rm -rf password_generator
+
+
+.PHONY: build docker-build docker-push docker-run test k8s-deploy k8s-port-forward clean-docker clean-k8s clean-all 
