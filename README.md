@@ -98,3 +98,44 @@ ingress and hpa autoscalling can be enabled using chart options:
 ```
 --set ingress.enabled=true --set autoscaling.enabled=true
 ```
+
+--------------------------------------------------------------
+# Exercise 2 Solution
+--------------------------------------------------------------
+
+## Possible improvements to the Terraform code:
+- Modularize the code to make it more manageable and reusable.
+- Use variables and input parameters to make the code more dynamic and adaptable to different environments.
+- Use remote state management to improve the collaboration between team members and avoid conflicts.
+- Add more security controls, such as IAM policies, security groups, and encryption.
+- Make sure the S3 bucket and DynamoDB table are only accessible by authorized users/roles. useing AWS IAM policies to restrict access to these ressources.
+- Using official aws modules to create vpc, network, route53, s3, and create iam policy for kops to access this resources.
+- Consider implementing backup and restore procedurues for your state storage resources. You can use AWS Backup service to automate the backup and restore process.
+
+- Using the kops CLI to generate Terraform files with the --target=terraform optiion will result in a large, single Terrafrom configuration file. While this file may be unpractical, it is an Infrastructure as Code (IaC) file in the .tf format that can be easily maintained, updated using `kops update`, version-controlled and automate deployment using CI/CD pipeline
+
+
+
+## Design monitoring, logging and alerting architecture for these environment
+
+To design a monitoring, logging, and alerting architecture for these environments, I would consider the following components:
+
+* Metrics Collection: I would use a metrics collection tool such as Prometheus to collect metrics from various sources such as the Kubernetes API server, cluster nodes, and application components running in the cluster. These metrics would be used to monitor the performance and health of the cluster and its workloads.
+
+* Logging: For logging, I would use a centralized logging solution such as the Elastic Stack (Elasticsearch, Logstash, and Kibana) or Fluentd to collect and aggregate logs from various sources including Kubernetes API server, cluster nodes, and application compoents. The centralized logging solution should support log agregation, searching, and visualization.
+
+* Alerting: I would use an alerting tool such as Prometheus Alertmanager or Grafana Loki to monitor the collected metrics and logs and send alerts when predefined thresholds or anomalies are detected. Alerting should be based on rules and connditions pre-defined, and should include escalation policyes and notification channnels such as email or Slack. Use incident management and alerting tools, such as PagerDuty, to manage and esclate incidents and alerts based on severity, priority, and impact.
+
+* Dashboarding and Visualization: For dashboarding and visualiziation, I would use tools such as Grafana or Kibana to create custom dashboards and visualizations based on the collected metrics and logs. These dashboards would provide visibility into the overall health and performance of the cluster and its applications.
+
+* Tracing: To troubleshoot and analyze issues with the applications, I would use a distributed tracing solution such as Jaeger or SigNoz to trace requests as they traverse the various components of the application.
+
+## suggestion to improve previous solutions scalability
+
+To improve the scalabillity of the deployment, monitoring, and loging architecture for dozens of installations, we can consider the following approaches:
+
+Scalable monitoring infrastructure.
+We can decouple the monitoring infrastrucuture from the main infrastructure and move it to a separate scalable cluster. This technic offers greater flxibility in scaling each infrastructure indepedently and helps to isolate the monitoring tolls and data from the main infrastructure, reducing the risk of resource contention and increasing security. We can also use dedicated monitoring clusters to manage monitoring infrastructure and its resources.
+
+Migrating to a managed Kubernetes service (EKS)
+We can consider migrating from Kops to a fully managed Kuberntes service like Amazon (EKS). EKS can help to simplify the management of the Kubernetes control plane, reducing the operational burden of managing a cluster at scale. EKS provides native integrations with other AWS services.
