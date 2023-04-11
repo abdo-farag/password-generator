@@ -1,6 +1,23 @@
 --------------------------------------------------------------
 # Exercise 1 Solution
 --------------------------------------------------------------
+
+## Password Generator API
+This is a prototype of a REST API that generates secure passwords. It takes four input parameters in the request:
+
+* `min_length`: the minimum length of the generated password
+* `special_chars`: the number of special characters to include in the password
+* `numbers`: the number of numbers to include in the password
+* `num_passwords`: the number of passwords to generate
+
+The program starts an HTTP server that listens for incoming requests on port 8000. There are three endpoints available: /genpass for generating passwords, /healthz for checking the health of the application, and /readyz for checking the readiness of the application.
+
+The /genpass endpoint accepts a POST request with the user's input as a json payload. It generates secure passwords based on the user's input and returns them in an array.
+
+The /healthz endpoint accepts a GET request and returns a 200 OK status code to indicate that the application is healthzy.
+
+The /readyz endpoint also accepts a GET request and returns a 200 OK status code only if the application is ready. It uses an atomic variable to track the readiness status and a middleware function to check the status before each request.
+
 ### Prerequisites
 Before running this application, you must have the following installed:
 
@@ -38,7 +55,7 @@ make clean-docker
 ```
 make all
 ```
-2- start port forwarding using:
+2- Start port forwarding using:
 ```
 kubectl port-forward -n password-generator deployments/password-generator  8000:8000
 ```
