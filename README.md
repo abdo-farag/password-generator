@@ -108,12 +108,73 @@ ingress and hpa autoscalling can be enabled using chart options:
 - Use variables and input parameters to make the code more dynamic and adaptable to different environments.
 - Use remote state management to improve the collaboration between team members and avoid conflicts.
 - Add more security controls, such as IAM policies, security groups, and encryption.
+- Implement high availability and disaster recovery features, such as auto-scaling groups, load balancers, and backup and restore mechanisms.
+- Terraform hierarchies can be structured in many ways depending on the compelexity and needs of the infrastructure being mannaged. In this structure, we have separated the modules directory from the environment-specific directories. We then have environment-specific directories for dev and prod. Within each environment directory, we have the environment tf files, and state.tf files. The modules directory contains modules that are used by both dev and prod environments, and each environment directory contains environment-specific configuration, for example:
+```
+➜  ~ tree -a --dirsfirst ./terraform
+./terraform
+├── dev
+│   ├── cluster
+│   │   ├── main.tf
+│   │   ├── outputs.tf
+│   │   └── variables.tf
+│   ├── modules
+│   │   ├── kops
+│   │   │   ├── main.tf
+│   │   │   ├── outputs.tf
+│   │   │   └── variables.tf
+│   │   ├── s3_state
+│   │   │   ├── main.tf
+│   │   │   ├── outputs.tf
+│   │   │   └── variables.tf
+│   │   └── vpc
+│   │       ├── main.tf
+│   │       ├── outputs.tf
+│   │       └── variables.tf
+│   ├── state
+│   │   ├── main.tf
+│   │   ├── outputs.tf
+│   │   └── variables.tf
+│   ├── outputs.tf
+│   ├── provider.tf
+│   ├── terraform.tfvars
+│   └── variables.tf
+└── prod
+    ├── cluster
+    │   ├── main.tf
+    │   ├── outputs.tf
+    │   └── variables.tf
+    ├── modules
+    │   ├── kops
+    │   │   ├── main.tf
+    │   │   ├── outputs.tf
+    │   │   └── variables.tf
+    │   ├── s3_state
+    │   │   ├── main.tf
+    │   │   ├── outputs.tf
+    │   │   └── variables.tf
+    │   └── vpc
+    │       ├── main.tf
+    │       ├── outputs.tf
+    │       └── variables.tf
+    ├── state
+    │   ├── main.tf
+    │   ├── outputs.tf
+    │   └── variables.tf
+    ├── outputs.tf
+    ├── provider.tf
+    ├── terraform.tfvars
+    └── variables.tf
+
+```
+
 - Make sure the S3 bucket and DynamoDB table are only accessible by authorized users/roles. useing AWS IAM policies to restrict access to these ressources.
 - Using official aws modules to create vpc, network, route53, s3, and create iam policy for kops to access this resources.
 - Consider implementing backup and restore procedurues for your state storage resources. You can use AWS Backup service to automate the backup and restore process.
 
 - Using the kops CLI to generate Terraform files with the --target=terraform optiion will result in a large, single Terrafrom configuration file. While this file may be unpractical, it is an Infrastructure as Code (IaC) file in the .tf format that can be easily maintained, updated using `kops update`, version-controlled and automate deployment using CI/CD pipeline
 
+- Using the Terraform kops provider is also a good option for creating a Kubernetes cluster on AWS. The kops module for Terraform abstracts away some of the complexities of creating a Kubernetes cluster with kops, and provides a simpler interface for managing the cluster infrastructure. Using the Terraform kops provider can provide some benefits over using kops directly. Nevertheless using kops provider may come with some limitations as well. For example, may not support all the features and configurations that are available when using kops directly.
 
 
 ## Design monitoring, logging and alerting architecture for these environment
@@ -139,3 +200,9 @@ We can decouple the monitoring infrastrucuture from the main infrastructure and 
 
 Migrating to a managed Kubernetes service (EKS)
 We can consider migrating from Kops to a fully managed Kuberntes service like Amazon (EKS). EKS can help to simplify the management of the Kubernetes control plane, reducing the operational burden of managing a cluster at scale. EKS provides native integrations with other AWS services.
+
+Automating infrastructure provissioning:-
+We can automate infrastructure provisioning using Terraform and Infrastructure as Code (IaC) practices. We can use reusable modules to deploy infrastructure across multiple environments with consistent configurations. Automating infrastructure provisioning allows us to quickly and easily scale our infrastructure to dozens of installations.Consider using (CI/CD) pipeline can help us autumate the depoloyment of our infrastructure changes, further reducing manual effort and increasing consistncy and reliabillity.
+
+Implementing centralized logging and alerting:
+Centralized logging is an essential component of any scalable monitoring and logging architecture. We can use a tool like Elasticsearch, Logstash, and Kibana (ELK) stack, which can collect and analyze logs from multiple sources and provide a centralized view of logs. Centralyzed alerting is essential for monitoring and responding to incidents at scale.
